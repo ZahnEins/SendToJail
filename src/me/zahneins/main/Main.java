@@ -4,24 +4,19 @@ import org.bukkit.*;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.libs.com.google.gson.internal.$Gson$Preconditions;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -140,6 +135,15 @@ public class Main extends JavaPlugin implements Listener {
                                  tpPlayer.playSound(tpPlayer.getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
                                  tpPlayer.sendMessage(ChatColor.RED + "คุณถูกจำคุกเป็นเวลา : 5 นาที");
                                  tpPlayer.sendMessage(ChatColor.AQUA + "เวลาที่จะได้รับอิสระภาพ : " + LocalTime.now().plusMinutes(5));
+
+                                 /* ลบไอเทมผู้เล่นทั้งหมดเมื่อโดนส่งเข้าคุก
+                                 tpPlayer.getInventory().clear();
+                                 tpPlayer.getInventory().setHelmet(null);
+                                 tpPlayer.getInventory().setChestplate(null);
+                                 tpPlayer.getInventory().setLeggings(null);
+                                 tpPlayer.getInventory().setBoots(null);
+                                 tpPlayer.updateInventory();
+                                 */
                                  playerList.add(tpPlayer);
                                  Jailtime.put(tpPlayer, LocalTime.now().plusMinutes(5));
                              }
@@ -170,7 +174,17 @@ public class Main extends JavaPlugin implements Listener {
          }
 
     }
-
+    //ห้ามพิมพ์ /spawn เมื่ออยู่ในคุก
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCommand(PlayerCommandPreprocessEvent event){
+         Player CommandPlayer = event.getPlayer();
+        if(!event.getMessage().equals("spawn")){
+            if(playerList.contains(CommandPlayer)) {
+                event.getPlayer().sendMessage(ChatColor.RED + "ไม่สามารถใช้คำสั่งได้เมื่ออยู่ในคุก");
+                event.setCancelled(true);
+            }
+        }
+    }
 
     public class CheckJail extends BukkitRunnable {
         @Override
@@ -207,7 +221,6 @@ public class Main extends JavaPlugin implements Listener {
 
             }
         }
-
     }
 
 
