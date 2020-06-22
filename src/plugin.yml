@@ -1,0 +1,9 @@
+main: me.zahneins.main.Main
+name: SenToJail
+version: 1.0
+author: ZahnEins
+description: Have fun
+commands:
+  stj:
+    description: Sent To Jail
+    usage: /<command>

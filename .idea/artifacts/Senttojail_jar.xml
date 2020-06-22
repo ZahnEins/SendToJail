@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Senttojail:jar">
+    <output-path>$PROJECT_DIR$/../SeverTest For Plugin/ห้องทดลอง CraftBukkit 1.8/plugins</output-path>
+    <root id="archive" name="Senttojail.jar">
+      <element id="module-output" name="Sendtojail" />
+    </root>
+  </artifact>
+</component>
